@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>羽毛球混双对战系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            line-height: 1.6;
+            padding: 10px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(to right, #ff6b6b, #4ecdc4);
+            color: white;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .badminton-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #ffd700;
+            text-shadow: 0 2px 3px rgba(0,0,0,0.3);
+        }
+        
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            color: #ff6b6b;
+        }
+        
+        .players-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .players-box {
+            flex: 1;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+        
+        .players-box h3 {
+            text-align: center;
+            margin-bottom: 12px;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+        
+        .player-list {
+            list-style: none;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        
+        .player-item {
+            padding: 8px 12px;
+            background: #e9ecef;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .player-item .name {
+            display: flex;
+            align-items: center;
+        }
+        
+        .player-item i {
+            margin-right: 8px;
+            color: #ff6b6b;
+        }
+        
+        .player-item .actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .player-item .btn-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #4ecdc4;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        input, select, button {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        input:focus, select:focus {
+            border-color: #4ecdc4;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2);
+        }
+        
+        button {
+            background: linear-gradient(to right, #ff6b6b, #4ecdc4);
+            color: white;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:active {
+            transform: translateY(2px);
+        }
+        
+        button:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-group button {
+            flex: 1;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(to right, #6a89cc, #4a69bd);
+        }
+        
+        .matches-container {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        
+        .match-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
+            border-left: 4px solid #4ecdc4;
+        }
+        
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .teams-container {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .team {
+            flex: 1;
+            padding: 10px;
+        }
+        
+        .vs {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            color: #ff6b6b;
+        }
+        
+        .score-input {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .score-input input {
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .match-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .match-actions button {
+            padding: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .player-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .player-filter select {
+            flex: 1;
+        }
+        
+        .ranking-list {
+            list-style: none;
+        }
+        
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .rank {
+            width: 30px;
+            height: 30px;
+            background: #ff6b6b;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .rank-1 {
+            background: linear-gradient(to right, #ffd700, #ffa500);
+        }
+        
+        .rank-2 {
+            background: linear-gradient(to right, #c0c0c0, #a9a9a9);
+        }
+        
+        .rank-3 {
+            background: linear-gradient(to right, #cd7f32, #8b4513);
+        }
+        
+        .player-info {
+            flex: 1;
+        }
+        
+        .player-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .stats-item {
+            text-align: center;
+        }
+        
+        .stats-value {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 30px;
+            color: #6c757d;
+            font-style: italic;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f0f0f0;
+            border-radius: 50px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            background: linear-gradient(to right, #ff6b6b, #4ecdc4);
+            color: white;
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .player-selector {
+            background: #f0f8ff;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .selector-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .selector-item {
+            padding: 10px;
+            background: #e0f7fa;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .selector-item.selected {
+            background: #4ecdc4;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .selector-item.male {
+            background: #e3f2fd;
+        }
+        
+        .selector-item.female {
+            background: #fce4ec;
+        }
+        
+        .selector-item.selected.male {
+            background: #2196f3;
+            color: white;
+        }
+        
+        .selector-item.selected.female {
+            background: #e91e63;
+            color: white;
+        }
+        
+        .selector-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .selector-title {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .selector-count {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            padding: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .close-modal {
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .modal-footer {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .players-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .section {
+                padding: 12px;
+            }
+            
+            .match-card {
+                padding: 12px;
+            }
+            
+            .teams-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .vs {
+                justify-content: center;
+                padding: 5px 0;
+            }
+            
+            .selector-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="badminton-icon">
+                <i class="fas fa-table-tennis"></i>
+            </div>
+            <h1>羽毛球混双对战系统</h1>
+            <div class="subtitle">智能生成对战 · 实时比分记录 · 动态选手排名</div>
+        </header>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="setup">比赛设置</div>
+            <div class="tab" data-tab="matches">对局管理</div>
+            <div class="tab" data-tab="ranking">选手排名</div>
+        </div>
+        
+        <!-- 比赛设置 -->
+        <div class="tab-content active" id="setup-content">
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-users"></i>
+                    <h2>参赛选手</h2>
+                </div>
+                
+                <div class="player-selector">
+                    <div class="selector-header">
+                        <div class="selector-title">选择参赛选手</div>
+                        <div class="selector-count">已选: <span id="selected-count">0</span> 人</div>
+                    </div>
+                    <div class="selector-grid" id="player-selector-grid">
+                        <!-- 选手将通过JS动态生成 -->
+                    </div>
+                    <button id="select-all-btn">
+                        <i class="fas fa-check-circle"></i> 全选所有选手
+                    </button>
+                </div>
+                
+                <div class="players-container">
+                    <div class="players-box">
+                        <h3>男生选手</h3>
+                        <ul class="player-list" id="male-players">
+                            <!-- 动态生成选中的男生选手 -->
+                        </ul>
+                    </div>
+                    
+                    <div class="players-box">
+                        <h3>女生选手</h3>
+                        <ul class="player-list" id="female-players">
+                            <!-- 动态生成选中的女生选手 -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-cog"></i>
+                    <h2>比赛设置</h2>
+                </div>
+                
+                <div class="form-group">
+                    <label for="total-matches">总对局数量</label>
+                    <input type="number" id="total-matches" min="1" value="15">
+                </div>
+                
+                <button id="generate-btn">
+                    <i class="fas fa-plus-circle"></i> 生成混双对局
+                </button>
+                
+                <div class="btn-group">
+                    <button class="btn-secondary" id="reset-btn">
+                        <i class="fas fa-redo"></i> 重置数据
+                    </button>
+                    <button class="btn-secondary" id="clear-btn">
+                        <i class="fas fa-trash"></i> 清空比分
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 对局管理 -->
+        <div class="tab-content" id="matches-content">
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-list"></i>
+                    <h2>对局列表</h2>
+                </div>
+                
+                <div class="player-filter">
+                    <select id="player-filter">
+                        <option value="">所有选手</option>
+                    </select>
+                </div>
+                
+                <div class="matches-container" id="matches-container">
+                    <div class="no-data">
+                        <i class="fas fa-inbox"></i>
+                        <p>暂无对局数据，请先生成对局</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 选手排名 -->
+        <div class="tab-content" id="ranking-content">
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-trophy"></i>
+                    <h2>选手排名</h2>
+                </div>
+                
+                <ul class="ranking-list" id="ranking-list">
+                    <div class="no-data">
+                        <i class="fas fa-inbox"></i>
+                        <p>暂无排名数据，请完成比赛后查看</p>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 选手详情模态框 -->
+    <div class="modal" id="player-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-player-name">选手详情</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div id="player-details">
+                <!-- 选手详情将通过JS动态生成 -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="close-modal-btn">关闭</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 内置选手数据
+            const allPlayers = {
+                boys: [
+                    { id: 'b1', name: '熊猫', gender: 'male', matches: 0, wins: 0 },
+                    { id: 'b2', name: '小黑', gender: 'male', matches: 0, wins: 0 },
+                    { id: 'b3', name: '祥哥', gender: 'male', matches: 0, wins: 0 },
+                    { id: 'b4', name: '李老师', gender: 'male', matches: 0, wins: 0 },
+                    { id: 'b5', name: '三火', gender: 'male', matches: 0, wins: 0 }
+                ],
+                girls: [
+                    { id: 'g1', name: '大大', gender: 'female', matches: 0, wins: 0 },
+                    { id: 'g2', name: '小鑫鑫', gender: 'female', matches: 0, wins: 0 },
+                    { id: 'g3', name: '小飞丫', gender: 'female', matches: 0, wins: 0 },
+                    { id: 'g4', name: '乐乐', gender: 'female', matches: 0, wins: 0 },
+                    { id: 'g5', name: '二火', gender: 'female', matches: 0, wins: 0 }
+                ]
+            };
+            
+            // 应用状态
+            const state = {
+                selectedBoys: [...allPlayers.boys],
+                selectedGirls: [...allPlayers.girls],
+                matches: [],
+                totalMatches: 15
+            };
+            
+            // DOM元素
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const generateBtn = document.getElementById('generate-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const totalMatchesInput = document.getElementById('total-matches');
+            const matchesContainer = document.getElementById('matches-container');
+            const playerFilter = document.getElementById('player-filter');
+            const rankingList = document.getElementById('ranking-list');
+            const playerSelectorGrid = document.getElementById('player-selector-grid');
+            const malePlayersList = document.getElementById('male-players');
+            const femalePlayersList = document.getElementById('female-players');
+            const selectedCount = document.getElementById('selected-count');
+            const selectAllBtn = document.getElementById('select-all-btn');
+            const playerModal = document.getElementById('player-modal');
+            const modalPlayerName = document.getElementById('modal-player-name');
+            const playerDetails = document.getElementById('player-details');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const closeModalSpan = document.querySelector('.close-modal');
+            
+            // 初始化
+            function init() {
+                renderPlayerSelector();
+                renderSelectedPlayers();
+                loadData();
+                renderPlayerFilter();
+                renderMatches();
+                renderRankings();
+                
+                // 标签页切换
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        tabs.forEach(t => t.classList.remove('active'));
+                        tabContents.forEach(c => c.classList.remove('active'));
+                        
+                        tab.classList.add('active');
+                        document.getElementById(`${tab.dataset.tab}-content`).classList.add('active');
+                    });
+                });
+                
+                // 生成对局
+                generateBtn.addEventListener('click', generateMatches);
+                
+                // 重置数据
+                resetBtn.addEventListener('click', resetData);
+                
+                // 清空比分
+                clearBtn.addEventListener('click', clearScores);
+                
+                // 总对局数变化
+                totalMatchesInput.addEventListener('change', function() {
+                    state.totalMatches = parseInt(this.value) || 15;
+                    saveData();
+                });
+                
+                // 选手筛选
+                playerFilter.addEventListener('change', renderMatches);
+                
+                // 全选按钮
+                selectAllBtn.addEventListener('click', selectAllPlayers);
+                
+                // 关闭模态框
+                closeModalBtn.addEventListener('click', () => {
+                    playerModal.style.display = 'none';
+                });
+                
+                closeModalSpan.addEventListener('click', () => {
+                    playerModal.style.display = 'none';
+                });
+                
+                window.addEventListener('click', (e) => {
+                    if (e.target === playerModal) {
+                        playerModal.style.display = 'none';
+                    }
+                });
+            }
+            
+            // 渲染选手选择器
+            function renderPlayerSelector() {
+                playerSelectorGrid.innerHTML = '';
+                
+                // 添加男生选手
+                allPlayers.boys.forEach(player => {
+                    const isSelected = state.selectedBoys.some(p => p.id === player.id);
+                    const item = document.createElement('div');
+                    item.className = `selector-item male ${isSelected ? 'selected' : ''}`;
+                    item.dataset.id = player.id;
+                    item.dataset.gender = 'male';
+                    item.innerHTML = `<i class="fas fa-male"></i> ${player.name}`;
+                    
+                    item.addEventListener('click', () => {
+                        togglePlayerSelection(player.id, 'male');
+                    });
+                    
+                    playerSelectorGrid.appendChild(item);
+                });
+                
+                // 添加女生选手
+                allPlayers.girls.forEach(player => {
+                    const isSelected = state.selectedGirls.some(p => p.id === player.id);
+                    const item = document.createElement('div');
+                    item.className = `selector-item female ${isSelected ? 'selected' : ''}`;
+                    item.dataset.id = player.id;
+                    item.dataset.gender = 'female';
+                    item.innerHTML = `<i class="fas fa-female"></i> ${player.name}`;
+                    
+                    item.addEventListener('click', () => {
+                        togglePlayerSelection(player.id, 'female');
+                    });
+                    
+                    playerSelectorGrid.appendChild(item);
+                });
+                
+                // 更新选择计数
+                updateSelectedCount();
+            }
+            
+            // 切换选手选择状态
+            function togglePlayerSelection(playerId, gender) {
+                if (gender === 'male') {
+                    const index = state.selectedBoys.findIndex(p => p.id === playerId);
+                    
+                    if (index !== -1) {
+                        // 如果已经是选中状态，取消选择（但至少保留2名男生）
+                        if (state.selectedBoys.length > 2) {
+                            state.selectedBoys.splice(index, 1);
+                        } else {
+                            alert('至少需要选择2名男生选手！');
+                            return;
+                        }
+                    } else {
+                        // 添加到选中列表
+                        const player = allPlayers.boys.find(p => p.id === playerId);
+                        if (player) state.selectedBoys.push(player);
+                    }
+                } else {
+                    const index = state.selectedGirls.findIndex(p => p.id === playerId);
+                    
+                    if (index !== -1) {
+                        // 如果已经是选中状态，取消选择（但至少保留2名女生）
+                        if (state.selectedGirls.length > 2) {
+                            state.selectedGirls.splice(index, 1);
+                        } else {
+                            alert('至少需要选择2名女生选手！');
+                            return;
+                        }
+                    } else {
+                        // 添加到选中列表
+                        const player = allPlayers.girls.find(p => p.id === playerId);
+                        if (player) state.selectedGirls.push(player);
+                    }
+                }
+                
+                renderPlayerSelector();
+                renderSelectedPlayers();
+                saveData();
+            }
+            
+            // 全选所有选手
+            function selectAllPlayers() {
+                state.selectedBoys = [...allPlayers.boys];
+                state.selectedGirls = [...allPlayers.girls];
+                renderPlayerSelector();
+                renderSelectedPlayers();
+                saveData();
+            }
+            
+            // 更新选择计数
+            function updateSelectedCount() {
+                const count = state.selectedBoys.length + state.selectedGirls.length;
+                selectedCount.textContent = count;
+            }
+            
+            // 渲染已选中的选手列表
+            function renderSelectedPlayers() {
+                malePlayersList.innerHTML = '';
+                femalePlayersList.innerHTML = '';
+                
+                // 渲染男生选手
+                state.selectedBoys.forEach(player => {
+                    const li = document.createElement('li');
+                    li.className = 'player-item';
+                    li.innerHTML = `
+                        <div class="name">
+                            <i class="fas fa-male"></i> ${player.name}
+                        </div>
+                        <div class="actions">
+                            <button class="btn-icon remove-player" data-id="${player.id}" data-gender="male">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    `;
+                    malePlayersList.appendChild(li);
+                });
+                
+                // 渲染女生选手
+                state.selectedGirls.forEach(player => {
+                    const li = document.createElement('li');
+                    li.className = 'player-item';
+                    li.innerHTML = `
+                        <div class="name">
+                            <i class="fas fa-female"></i> ${player.name}
+                        </div>
+                        <div class="actions">
+                            <button class="btn-icon remove-player" data-id="${player.id}" data-gender="female">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    `;
+                    femalePlayersList.appendChild(li);
+                });
+                
+                // 添加删除事件监听
+                document.querySelectorAll('.remove-player').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const playerId = this.dataset.id;
+                        const gender = this.dataset.gender;
+                        
+                        if (gender === 'male' && state.selectedBoys.length > 2) {
+                            state.selectedBoys = state.selectedBoys.filter(p => p.id !== playerId);
+                        } else if (gender === 'female' && state.selectedGirls.length > 2) {
+                            state.selectedGirls = state.selectedGirls.filter(p => p.id !== playerId);
+                        } else {
+                            alert(`至少需要选择2名${gender === 'male' ? '男生' : '女生'}选手！`);
+                            return;
+                        }
+                        
+                        renderSelectedPlayers();
+                        renderPlayerSelector();
+                        saveData();
+                    });
+                });
+            }
+            
+            // 加载数据
+            function loadData() {
+                const savedData = localStorage.getItem('badmintonData');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+                    
+                    // 恢复选中的选手
+                    if (data.selectedBoys) {
+                        state.selectedBoys = data.selectedBoys.map(playerId => 
+                            allPlayers.boys.find(p => p.id === playerId) || []
+                        ).filter(Boolean);
+                    }
+                    
+                    if (data.selectedGirls) {
+                        state.selectedGirls = data.selectedGirls.map(playerId => 
+                            allPlayers.girls.find(p => p.id === playerId) || []
+                        ).filter(Boolean);
+                    }
+                    
+                    state.matches = data.matches || [];
+                    state.totalMatches = data.totalMatches || 15;
+                    totalMatchesInput.value = state.totalMatches;
+                    
+                    // 确保至少选中2名男生和2名女生
+                    if (state.selectedBoys.length < 2) {
+                        state.selectedBoys = [...allPlayers.boys].slice(0, 2);
+                    }
+                    
+                    if (state.selectedGirls.length < 2) {
+                        state.selectedGirls = [...allPlayers.girls].slice(0, 2);
+                    }
+                }
+            }
+            
+            // 保存数据
+            function saveData() {
+                const data = {
+                    // 只保存选手ID
+                    selectedBoys: state.selectedBoys.map(p => p.id),
+                    selectedGirls: state.selectedGirls.map(p => p.id),
+                    matches: state.matches,
+                    totalMatches: state.totalMatches
+                };
+                
+                localStorage.setItem('badmintonData', JSON.stringify(data));
+            }
+            
+            // 渲染选手筛选器
+            function renderPlayerFilter() {
+                playerFilter.innerHTML = '<option value="">所有选手</option>';
+                
+                [...state.selectedBoys, ...state.selectedGirls].forEach(player => {
+                    const option = document.createElement('option');
+                    option.value = player.name;
+                    option.textContent = player.name;
+                    playerFilter.appendChild(option);
+                });
+            }
+            
+            // 生成混双对局
+            function generateMatches() {
+                // 检查选手数量
+                if (state.selectedBoys.length < 2) {
+                    alert('至少需要2名男生选手！');
+                    return;
+                }
+                
+                if (state.selectedGirls.length < 2) {
+                    alert('至少需要2名女生选手！');
+                    return;
+                }
+                
+                state.matches = [];
+                
+                // 计算每个选手需要出场的次数
+                const boyMatches = {};
+                const girlMatches = {};
+                
+                state.selectedBoys.forEach(boy => {
+                    boyMatches[boy.name] = Math.ceil(state.totalMatches * 2 / state.selectedBoys.length);
+                });
+                
+                state.selectedGirls.forEach(girl => {
+                    girlMatches[girl.name] = Math.ceil(state.totalMatches * 2 / state.selectedGirls.length);
+                });
+                
+                // 调整出场次数，确保总对局数正确
+                let totalBoyMatches = Object.values(boyMatches).reduce((a, b) => a + b, 0);
+                let totalGirlMatches = Object.values(girlMatches).reduce((a, b) => a + b, 0);
+                
+                // 调整男生出场次数
+                while (totalBoyMatches > state.totalMatches * 2) {
+                    for (const boy in boyMatches) {
+                        if (boyMatches[boy] > 1 && totalBoyMatches > state.totalMatches * 2) {
+                            boyMatches[boy]--;
+                            totalBoyMatches--;
+                        }
+                    }
+                }
+                
+                // 调整女生出场次数
+                while (totalGirlMatches > state.totalMatches * 2) {
+                    for (const girl in girlMatches) {
+                        if (girlMatches[girl] > 1 && totalGirlMatches > state.totalMatches * 2) {
+                            girlMatches[girl]--;
+                            totalGirlMatches--;
+                        }
+                    }
+                }
+                
+                // 生成所有可能的组合
+                const allCombinations = [];
+                
+                for (let i = 0; i < state.selectedBoys.length; i++) {
+                    for (let j = 0; j < state.selectedGirls.length; j++) {
+                        for (let k = i + 1; k < state.selectedBoys.length; k++) {
+                            for (let l = 0; l < state.selectedGirls.length; l++) {
+                                if (j !== l) {
+                                    allCombinations.push({
+                                        red: { 
+                                            boy: state.selectedBoys[i].name, 
+                                            girl: state.selectedGirls[j].name 
+                                        },
+                                        blue: { 
+                                            boy: state.selectedBoys[k].name, 
+                                            girl: state.selectedGirls[l].name 
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                // 打乱组合顺序
+                shuffleArray(allCombinations);
+                
+                // 选择组合，确保选手出场次数
+                const selectedMatches = [];
+                const matchCount = {};
+                
+                for (const match of allCombinations) {
+                    if (selectedMatches.length >= state.totalMatches) break;
+                    
+                    const players = [
+                        match.red.boy, match.red.girl, 
+                        match.blue.boy, match.blue.girl
+                    ];
+                    
+                    // 检查选手是否已经达到出场次数
+                    let valid = true;
+                    for (const player of players) {
+                        const maxMatches = state.selectedBoys.some(b => b.name === player) ? 
+                            boyMatches[player] : girlMatches[player];
+                            
+                        const currentMatches = matchCount[player] || 0;
+                        
+                        if (currentMatches >= maxMatches) {
+                            valid = false;
+                            break;
+                        }
+                    }
+                    
+                    // 检查选手是否连续出场超过两次
+                    if (valid) {
+                        const lastTwoMatches = selectedMatches.slice(-2);
+                        for (const prevMatch of lastTwoMatches) {
+                            const prevPlayers = [
+                                prevMatch.red.boy, prevMatch.red.girl, 
+                                prevMatch.blue.boy, prevMatch.blue.girl
+                            ];
+                            
+                            for (const player of players) {
+                                if (prevPlayers.includes(player)) {
+                                    // 如果同一个选手在最近两场都出现过，跳过
+                                    if (prevPlayers.filter(p => p === player).length >= 2) {
+                                        valid = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            
+                            if (!valid) break;
+                        }
+                    }
+                    
+                    if (valid) {
+                        selectedMatches.push({
+                            id: selectedMatches.length + 1,
+                            ...match,
+                            score: { red: null, blue: null },
+                            completed: false
+                        });
+                        
+                        // 更新出场次数
+                        for (const player of players) {
+                            matchCount[player] = (matchCount[player] || 0) + 1;
+                        }
+                    }
+                }
+                
+                state.matches = selectedMatches;
+                saveData();
+                renderMatches();
+                renderRankings();
+                
+                // 切换到对局管理标签页
+                tabs.forEach(tab => tab.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                document.querySelector('.tab[data-tab="matches"]').classList.add('active');
+                document.getElementById('matches-content').classList.add('active');
+            }
+            
+            // 渲染对局列表
+            function renderMatches() {
+                const selectedPlayer = playerFilter.value;
+                const filteredMatches = selectedPlayer ? 
+                    state.matches.filter(match => 
+                        match.red.boy === selectedPlayer ||
+                        match.red.girl === selectedPlayer ||
+                        match.blue.boy === selectedPlayer ||
+                        match.blue.girl === selectedPlayer
+                    ) : state.matches;
+                
+                if (filteredMatches.length === 0) {
+                    matchesContainer.innerHTML = `
+                        <div class="no-data">
+                            <i class="fas fa-inbox"></i>
+                            <p>${selectedPlayer ? `没有找到${selectedPlayer}参与的对局` : '暂无对局数据'}</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                matchesContainer.innerHTML = '';
+                
+                filteredMatches.forEach(match => {
+                    const matchCard = document.createElement('div');
+                    matchCard.className = 'match-card';
+                    matchCard.innerHTML = `
+                        <div class="match-header">
+                            <span>对局 #${match.id}</span>
+                            <span>${match.completed ? '<i class="fas fa-check-circle" style="color: #4ecdc4;"></i> 已完成' : '<i class="fas fa-clock" style="color: #ff6b6b;"></i> 未开始'}</span>
+                        </div>
+                        
+                        <div class="teams-container">
+                            <div class="team">
+                                <div class="player"><i class="fas fa-male"></i> ${match.red.boy}</div>
+                                <div class="player"><i class="fas fa-female"></i> ${match.red.girl}</div>
+                            </div>
+                            
+                            <div class="vs">VS</div>
+                            
+                            <div class="team">
+                                <div class="player"><i class="fas fa-male"></i> ${match.blue.boy}</div>
+                                <div class="player"><i class="fas fa-female"></i> ${match.blue.girl}</div>
+                            </div>
+                        </div>
+                        
+                        ${match.completed ? `
+                            <div class="score-display" style="text-align: center; font-size: 1.5rem; font-weight: bold; margin: 10px 0;">
+                                ${match.score.red} : ${match.score.blue}
+                            </div>
+                        ` : `
+                            <div class="score-input">
+                                <input type="number" min="0" max="30" class="red-score" placeholder="红方">
+                                <div style="display: flex; align-items: center; font-weight: bold;">:</div>
+                                <input type="number" min="0" max="30" class="blue-score" placeholder="蓝方">
+                            </div>
+                        `}
+                        
+                        <div class="match-actions">
+                            ${match.completed ? `
+                                <button class="btn-secondary edit-score" data-id="${match.id}">
+                                    <i class="fas fa-edit"></i> 修改比分
+                                </button>
+                            ` : `
+                                <button class="save-score" data-id="${match.id}">
+                                    <i class="fas fa-save"></i> 保存比分
+                                </button>
+                            `}
+                        </div>
+                    `;
+                    
+                    matchesContainer.appendChild(matchCard);
+                });
+                
+                // 添加事件监听
+                document.querySelectorAll('.save-score').forEach(btn => {
+                    btn.addEventListener('click', saveMatchScore);
+                });
+                
+                document.querySelectorAll('.edit-score').forEach(btn => {
+                    btn.addEventListener('click', editMatchScore);
+                });
+            }
+            
+            // 保存比分
+            function saveMatchScore(e) {
+                const matchId = parseInt(e.target.dataset.id);
+                const match = state.matches.find(m => m.id === matchId);
+                
+                const matchCard = e.target.closest('.match-card');
+                const redScoreInput = matchCard.querySelector('.red-score');
+                const blueScoreInput = matchCard.querySelector('.blue-score');
+                
+                const redScore = parseInt(redScoreInput.value);
+                const blueScore = parseInt(blueScoreInput.value);
+                
+                if (isNaN(redScore) || isNaN(blueScore)) {
+                    alert('请输入有效的比分！');
+                    return;
+                }
+                
+                if (redScore < 0 || blueScore < 0 || redScore > 30 || blueScore > 30) {
+                    alert('比分必须在0-30之间！');
+                    return;
+                }
+                
+                if (redScore === blueScore) {
+                    alert('比分不能相同！');
+                    return;
+                }
+                
+                match.score = { red: redScore, blue: blueScore };
+                match.completed = true;
+                
+                saveData();
+                renderMatches();
+                renderRankings();
+            }
+            
+            // 修改比分
+            function editMatchScore(e) {
+                const matchId = parseInt(e.target.dataset.id);
+                const match = state.matches.find(m => m.id === matchId);
+                match.completed = false;
+                saveData();
+                renderMatches();
+            }
+            
+            // 渲染排名
+            function renderRankings() {
+                // 计算选手数据
+                const playerStats = {};
+                
+                // 初始化选手数据
+                [...state.selectedBoys, ...state.selectedGirls].forEach(player => {
+                    playerStats[player.name] = {
+                        wins: 0,
+                        losses: 0,
+                        pointsFor: 0,
+                        pointsAgainst: 0
+                    };
+                });
+                
+                // 统计比赛数据
+                state.matches.forEach(match => {
+                    if (!match.completed) return;
+                    
+                    const redPlayers = [match.red.boy, match.red.girl];
+                    const bluePlayers = [match.blue.boy, match.blue.girl];
+                    
+                    const redWon = match.score.red > match.score.blue;
+                    
+                    // 更新红队数据
+                    redPlayers.forEach(player => {
+                        playerStats[player].pointsFor += match.score.red;
+                        playerStats[player].pointsAgainst += match.score.blue;
+                        
+                        if (redWon) {
+                            playerStats[player].wins++;
+                        } else {
+                            playerStats[player].losses++;
+                        }
+                    });
+                    
+                    // 更新蓝队数据
+                    bluePlayers.forEach(player => {
+                        playerStats[player].pointsFor += match.score.blue;
+                        playerStats[player].pointsAgainst += match.score.red;
+                        
+                        if (!redWon) {
+                            playerStats[player].wins++;
+                        } else {
+                            playerStats[player].losses++;
+                        }
+                    });
+                });
+                
+                // 转换为数组并排序
+                const rankings = Object.entries(playerStats)
+                    .map(([player, stats]) => ({
+                        player,
+                        ...stats,
+                        netPoints: stats.pointsFor - stats.pointsAgainst
+                    }))
+                    .sort((a, b) => {
+                        // 先按胜场排序
+                        if (b.wins !== a.wins) return b.wins - a.wins;
+                        // 胜场相同按净胜分排序
+                        return b.netPoints - a.netPoints;
+                    });
+                
+                if (rankings.length === 0 || rankings.every(r => r.wins === 0 && r.losses === 0)) {
+                    rankingList.innerHTML = `
+                        <div class="no-data">
+                            <i class="fas fa-inbox"></i>
+                            <p>暂无排名数据，请完成比赛后查看</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                rankingList.innerHTML = '';
+                
+                rankings.forEach((player, index) => {
+                    const rankItem = document.createElement('li');
+                    rankItem.className = 'ranking-item';
+                    
+                    const rankClass = index < 3 ? `rank-${index + 1}` : '';
+                    
+                    rankItem.innerHTML = `
+                        <div class="rank ${rankClass}">${index + 1}</div>
+                        <div class="player-info">
+                            <div class="player-name">${player.player}</div>
+                            <div class="player-stats">
+                                <div class="stats-item">
+                                    <div>胜场</div>
+                                    <div class="stats-value">${player.wins}</div>
+                                </div>
+                                <div class="stats-item">
+                                    <div>负场</div>
+                                    <div class="stats-value">${player.losses}</div>
+                                </div>
+                                <div class="stats-item">
+                                    <div>净胜分</div>
+                                    <div class="stats-value">${player.netPoints}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    rankingList.appendChild(rankItem);
+                });
+            }
+            
+            // 重置数据
+            function resetData() {
+                if (confirm('确定要重置所有数据吗？这将清除所有对局和比分记录！')) {
+                    localStorage.removeItem('badmintonData');
+                    state.selectedBoys = [...allPlayers.boys];
+                    state.selectedGirls = [...allPlayers.girls];
+                    state.matches = [];
+                    state.totalMatches = 15;
+                    totalMatchesInput.value = 15;
+                    saveData();
+                    renderPlayerSelector();
+                    renderSelectedPlayers();
+                    renderMatches();
+                    renderRankings();
+                }
+            }
+            
+            // 清空比分
+            function clearScores() {
+                if (confirm('确定要清空所有比分吗？对局信息将保留但比分将被重置！')) {
+                    state.matches.forEach(match => {
+                        match.score = { red: null, blue: null };
+                        match.completed = false;
+                    });
+                    saveData();
+                    renderMatches();
+                    renderRankings();
+                }
+            }
+            
+            // 工具函数：打乱数组
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+            
+            // 启动应用
+            init();
+        });
+    </script>
+</body>
+</html>
