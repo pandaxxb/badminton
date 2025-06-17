@@ -202,7 +202,7 @@
         }
         
         .matches-container {
-            max-height: 300px;
+            max-height: 1000px;
             overflow-y: auto;
             margin-top: 10px;
         }
@@ -516,13 +516,13 @@
 </head>
 <body>
     <div class="container">
-        <header>
+       <!--  <header>
             <div class="badminton-icon">
                 <i class="fas fa-table-tennis"></i>
             </div>
             <h1>羽毛球混双对战系统</h1>
             <div class="subtitle">智能生成对战 · 实时比分记录 · 动态选手排名</div>
-        </header>
+        </header> -->
         
         <div class="tabs">
             <div class="tab active" data-tab="setup">比赛设置</div>
@@ -551,21 +551,19 @@
                     </button>
                 </div>
                 
-                <div class="players-container">
+               <!--  <div class="players-container">
                     <div class="players-box">
                         <h3>男生选手</h3>
                         <ul class="player-list" id="male-players">
-                            <!-- 动态生成选中的男生选手 -->
                         </ul>
                     </div>
                     
                     <div class="players-box">
                         <h3>女生选手</h3>
                         <ul class="player-list" id="female-players">
-                            <!-- 动态生成选中的女生选手 -->
                         </ul>
                     </div>
-                </div>
+                </div> -->
             </div>
             
             <div class="section">
@@ -703,7 +701,7 @@
             // 初始化
             function init() {
                 renderPlayerSelector();
-                renderSelectedPlayers();
+                // renderSelectedPlayers();
                 loadData();
                 renderPlayerFilter();
                 renderMatches();
@@ -834,7 +832,7 @@
                 }
                 
                 renderPlayerSelector();
-                renderSelectedPlayers();
+                // renderSelectedPlayers();
                 saveData();
             }
             
@@ -843,7 +841,7 @@
                 state.selectedBoys = [...allPlayers.boys];
                 state.selectedGirls = [...allPlayers.girls];
                 renderPlayerSelector();
-                renderSelectedPlayers();
+                // renderSelectedPlayers();
                 saveData();
             }
             
@@ -907,7 +905,7 @@
                             return;
                         }
                         
-                        renderSelectedPlayers();
+                        // renderSelectedPlayers();
                         renderPlayerSelector();
                         saveData();
                     });
@@ -1372,7 +1370,7 @@
                     totalMatchesInput.value = 15;
                     saveData();
                     renderPlayerSelector();
-                    renderSelectedPlayers();
+                    // renderSelectedPlayers();
                     renderMatches();
                     renderRankings();
                 }
